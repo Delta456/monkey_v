@@ -1,4 +1,4 @@
-module main
+module vmonkey
 
 fn is_letter(chr byte) bool {
 	return (chr >= `A` && chr <= `Z`) || (chr >= `a` && chr <= `a`) || (chr == `_`)
