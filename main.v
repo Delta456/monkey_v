@@ -1,6 +1,7 @@
 module main
 
-// TODO : Add more
+import vmonkey
+
 fn main() {
-	
+	lexer := vmonkey.new_lexer('test')
 }
