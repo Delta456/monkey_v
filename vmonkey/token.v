@@ -1,4 +1,4 @@
-module main
+module vmonkey
 
 struct Token  {
  mut:

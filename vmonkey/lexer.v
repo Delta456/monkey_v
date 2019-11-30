@@ -1,4 +1,4 @@
-module main
+module vmonkey
 
 struct Lexer {
  mut:
@@ -8,7 +8,7 @@ struct Lexer {
 	chr     byte // current char under examination
 }
 
-fn new(input string) &Lexer {
+pub fn new_lexer(input string) &Lexer {
 	mut l := &Lexer{input: input}
 	l.readchar()
 	return l
