@@ -1,12 +1,13 @@
-module main
+module monkey
 
-struct Token  {
+pub struct Token  {
+ pub:
  mut:
 	typ    string
 	literal string
 }
 
-const (
+pub const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 	// Identifiers + literals
@@ -15,6 +16,12 @@ const (
 	// Operators
 	ASSIGN = "="
 	PLUS   = "+"
+	MINUS = "-"
+    BANG = "!"
+    ASTERISK = "*"
+    SLASH = "/"
+    LT = "<"
+    GT = ">"
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
@@ -44,15 +51,14 @@ fn make_keyword() map[string]string {
 	}
 }
 
-const (
+pub const (
 	keywords = make_keyword()
 )
   
-/* TODO: Remove when it's implemented
-pub fn LookupIdent(ident string) TokenType {
-	if tok, ok := keywords[ident]; ok {
-		return tok
+fn lookup_ident(ident string) string {
+	if ident in keywords {
+		return ident
 	}
 	return IDENT
 }
-*/
+
