@@ -1,13 +1,14 @@
 module monkey
 
-struct parser {
-	l lexer
-	cur_token token
-	peek_token poken
+struct Parser {
+	l Lexer
+  mut:
+	cur_token Token
+	peek_token Token
 }
 
-fn new_parser(l lexer) &parser {
-	p := &Parser{l : l}
+fn new_parser(l Lexer) &Parser {
+	mut p := &Parser{l : l}
 
 	// Read two tokens, so cur_token and peek_token are both set
 	p.next_token()
@@ -16,7 +17,7 @@ fn new_parser(l lexer) &parser {
 	return p
 }
 
-fn (p mut parser) next_token() {
+fn (p mut Parser) next_token() {
 	p.cur_token = p.peek_token
 	p.peek_token = p.l.next_token()
 }
