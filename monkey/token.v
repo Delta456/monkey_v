@@ -7,45 +7,45 @@ pub mut:
 }
 
 pub const (
-	ILLEGAL = 'ILLEGAL'
-	EOF = 'EOF'
+	illegal      = 'ILLEGAL'
+	eof          = 'EOF'
 	// Identifiers + literals
-	IDENT = 'IDENT' // add, foobar, x, y, ...
-	INT = 'INT' // 1343456 // Operators
-	ASSIGN = '='
-	PLUS = '+'
-	MINUS = '-'
-	BANG = '!'
-	ASTERISK = '*'
-	SLASH = '/'
-	LT = '<'
-	GT = '>'
+	ident        = 'IDENT' // add, foobar, x, y, ...
+	int          = 'INT' // 1343456 // Operators
+	assign       = '='
+	plus         = '+'
+	minus        = '-'
+	bang         = '!'
+	asterisk     = '*'
+	slash        = '/'
+	lt           = '<'
+	gt           = '>'
 	// Delimiters
-	COMMA = ','
-	SEMICOLON = ';'
-	LPAREN = '('
-	RPAREN = ')'
-	LBRACE = '{'
-	RBRACE = '}'
+	comma        = ','
+	semicolon    = ';'
+	lparen       = '('
+	rparen       = ')'
+	lbrace       = '{'
+	rbrace       = '}'
 	// Keywords
-	FUNCTION = 'FUNCTION'
-	LET = 'LET'
-	TRUE = 'TRUE'
-	FALSE = 'FALSE'
-	IF = 'IF'
-	ELSE = 'ELSE'
-	RETURN = 'RETURN'
+	key_function = 'FUNCTION'
+	key_let      = 'LET'
+	key_true     = 'TRUE'
+	key_false    = 'FALSE'
+	key_if       = 'IF'
+	key_else     = 'ELSE'
+	key_return   = 'RETURN'
 )
 
 fn make_keyword() map[string]string {
 	return {
-		'fn': FUNCTION,
-		'let': LET,
-		'return': RETURN,
-		'if': IF,
-		'else': ELSE,
-		'true': TRUE,
-		'false': FALSE
+		'fn': key_function
+		'let': key_let
+		'return': key_return
+		'if': key_if
+		'else': key_else
+		'true': key_true
+		'false': key_false
 	}
 }
 

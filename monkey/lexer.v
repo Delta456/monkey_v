@@ -20,17 +20,16 @@ fn is_letter(chr byte) bool {
 	return (chr >= `A` && chr <= `Z`) || (chr >= `a` && chr <= `a`) || (chr == `_`)
 }
 
-fn (l mut Lexer) skip_whitespace() {
+fn (mut l Lexer) skip_whitespace() {
 	for l.chr == `\n` || l.chr == `\r` || l.chr == `\t` || l.chr == ` ` {
 		l.readchar()
 	}
 }
 
-pub fn (l mut Lexer) readchar() {
+pub fn (mut l Lexer) readchar() {
 	if l.readpos >= l.input.len {
 		l.chr = 0
-	}
-	else {
+	} else {
 		l.chr = l.input[l.readpos]
 		l.pos = l.readpos
 		l.readpos++
@@ -44,58 +43,54 @@ fn new_token(tokentype string, ch byte) Token {
 	}
 }
 
-pub fn (l mut Lexer) next_token() Token {
+pub fn (mut l Lexer) next_token() Token {
 	mut tok := Token{}
 	l.skip_whitespace()
 	match l.chr {
 		`=` {
-			tok = new_token(ASSIGN, l.chr)
+			tok = new_token(assign, l.chr)
 		}
 		`+` {
-			tok = new_token(PLUS, l.chr)
+			tok = new_token(plus, l.chr)
 		}
 		`;` {
-			tok = new_token(SEMICOLON, l.chr)
+			tok = new_token(semicolon, l.chr)
 		}
 		`{` {
-			tok = new_token(LBRACE, l.chr)
+			tok = new_token(lbrace, l.chr)
 		}
 		`}` {
-			tok = new_token(RBRACE, l.chr)
+			tok = new_token(rbrace, l.chr)
 		}
 		`-` {
-			tok = new_token(MINUS, l.chr)
+			tok = new_token(minus, l.chr)
 		}
 		`>` {
-			tok = new_token(GT, l.chr)
+			tok = new_token(gt, l.chr)
 		}
 		`<` {
-			tok = new_token(LT, l.chr)
+			tok = new_token(lt, l.chr)
 		}
 		`,` {
-			tok = new_token(COMMA, l.chr)
-		}
-		`;` {
-			tok = new_token(SEMICOLON, l.chr)
+			tok = new_token(comma, l.chr)
 		}
 		`/` {
-			tok = new_token(SLASH, l.chr)
+			tok = new_token(slash, l.chr)
 		}
 		`*` {
-			tok = new_token(ASTERISK, l.chr)
+			tok = new_token(asterisk, l.chr)
 		}
 		0 {
 			tok.literal = ''
-			tok.typ = EOF
+			tok.typ = eof
 		}
 		else {
 			if is_letter(l.chr) {
 				tok.literal = l.read_identifier()
 				tok.typ = lookup_ident(tok.literal)
 				return tok
-			}
-			else {
-				tok = new_token(ILLEGAL, l.chr)
+			} else {
+				tok = new_token(illegal, l.chr)
 			}
 		}
 	}
@@ -103,7 +98,7 @@ pub fn (l mut Lexer) next_token() Token {
 	return tok
 }
 
-pub fn (l mut Lexer) read_identifier() string {
+pub fn (mut l Lexer) read_identifier() string {
 	position := l.pos
 	for is_letter(l.chr) {
 		l.readchar()
