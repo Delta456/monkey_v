@@ -65,6 +65,6 @@ fn (mut parser Parser) next() {
 }
 
 fn (mut parser Parser) error(msg string) {
-	println(msg)
+	eprintln(msg)
 	exit(1)
 }
