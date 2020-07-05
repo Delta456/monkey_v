@@ -2,19 +2,37 @@ module repl
 
 import os
 import parser
+import lexer
+import token
+
+pub enum Type {
+	lexer
+	parser
+}
 
 const (
 	prompt = ">> "
 )
 
-pub fn start() {
+pub fn start(ty Type) {
 	for {
 		print(prompt)
 		line := os.get_line()
 		if line == 'exit' {
 			break 
 		}
-		mut p := parser.new_repl_parser(line)
-		p.parse()
+		if ty == .parser {
+			mut p := parser.new_repl_parser(line)
+		    p.parse()
+		}
+		else if ty == .lexer {
+			mut l := lexer.new(line)
+		    mut tok := l.next_token()
+
+		    for tok.typ != token.eof {
+			   println("{type : ${tok.typ}, literal : ${tok.literal}}")
+			   tok = l.next_token()
+		    }
+		}
 	}
 }
