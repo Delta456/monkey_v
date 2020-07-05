@@ -56,6 +56,30 @@ pub fn (mut l Lexer) next_token() token.Token {
 			tok = new_token(token.plus, l.ch)
 			l.read_char()
 		}
+		`-` {
+			tok = new_token(token.minus, l.ch)
+			l.read_char()
+		}
+		`*` {
+			tok = new_token(token.asterisk, l.ch)
+			l.read_char()
+		}
+		`/` {
+			tok = new_token(token.slash, l.ch)
+			l.read_char()
+		}
+		`!` {
+			tok = new_token(token.bang, l.ch)
+			l.read_char()
+		}
+		`<` {
+			tok = new_token(token.lt, l.ch)
+			l.read_char()
+		}
+		`>` {
+			tok = new_token(token.gt, l.ch)
+			l.read_char()
+		}
 		`{` {
 			tok = new_token(token.l_brace, l.ch)
 			l.read_char()

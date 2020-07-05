@@ -31,7 +31,7 @@ pub fn (mut parser Parser) parse() {
 
 fn (mut parser Parser) top_lvl_stmt() {
 	match (parser.cur_token.typ) {
-		token.let {
+		token.key_let {
 			parser.next()
 			parser.expect(token.ident)
 			parser.next()
@@ -44,7 +44,7 @@ fn (mut parser Parser) top_lvl_stmt() {
 			parser.expect(token.semicolon)
 			return
 		}
-		token.function {
+		token.key_function {
 
 		}
 		else {
