@@ -27,14 +27,28 @@ fn (mut l Lexer) read_char() {
 	l.read_pos++
 }
 
+fn (l Lexer) peek_char() byte {
+	if l.read_pos >= l.input.len {
+		return 0
+	}
+	return l.input[l.read_pos]
+}
+
 pub fn (mut l Lexer) next_token() token.Token {
 	mut tok := token.Token{}
 	l.skip_whitespaces()
 
 	match l.ch {
 		`=` {
-			tok = new_token(token.assign, l.ch)
-			l.read_char()
+			if l.peek_char() == `=` {
+				ch := l.ch
+				l.read_char()
+				tok = token.Token{token.eq, ch.str() + l.ch.str()}
+				l.read_char()
+			} else {
+				tok = new_token(token.assign, l.ch)
+			    l.read_char()
+			}
 		}
 		`;` {
 			tok = new_token(token.semicolon, l.ch)
@@ -69,8 +83,15 @@ pub fn (mut l Lexer) next_token() token.Token {
 			l.read_char()
 		}
 		`!` {
-			tok = new_token(token.bang, l.ch)
-			l.read_char()
+			if l.peek_char() == `=` {
+				ch := l.ch
+				l.read_char()
+				tok = token.Token{token.not_eq, ch.str() + l.ch.str()}
+				l.read_char()
+			} else {
+				tok = new_token(token.assign, l.ch)
+			    l.read_char()
+			}
 		}
 		`<` {
 			tok = new_token(token.lt, l.ch)

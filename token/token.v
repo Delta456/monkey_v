@@ -26,6 +26,8 @@ pub const (
 
 	lt = '<'
 	gt = '>'
+	eq = '=='
+	not_eq = '!='
 
 	// Delimiters
 	l_brace = '{'

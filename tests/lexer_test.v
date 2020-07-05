@@ -25,7 +25,7 @@ fn test_next_token() {
 		}
 
 		if tok.literal != tt.literal {
-			eprintln('tests[$i] - literal wrong. expected=${tt.literal} , got=${tok.literal}')
+			eprintln('tests[$i] - literal wrong. expected = `${tt.literal}` , got = `${tok.literal}`')
 			assert false
 		}
 	}
