@@ -19,7 +19,7 @@ pub fn start(ty Type) {
 		print(prompt)
 		line := os.get_line()
 		if line == 'exit' {
-			break 
+			break
 		}
 		if ty == .parser {
 			mut p := parser.new_repl_parser(line)
