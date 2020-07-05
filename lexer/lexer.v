@@ -34,29 +34,37 @@ pub fn (mut l Lexer) next_token() token.Token {
 	match l.ch {
 		`=` {
 			tok = new_token(token.assign, l.ch)
+			l.read_char()
 		}
 		`;` {
 			tok = new_token(token.semicolon, l.ch)
+			l.read_char()
 		}
 		`(` {
 			tok = new_token(token.l_paren, l.ch)
+			l.read_char()
 		}
 		`)` {
 			tok = new_token(token.r_paren, l.ch)
+			l.read_char()
 		}
 		`,` {
 			tok = new_token(token.colon, l.ch)
+			l.read_char()
 		}
 		`+` {
 			tok = new_token(token.plus, l.ch)
+			l.read_char()
 		}
 		`{` {
 			tok = new_token(token.l_brace, l.ch)
+			l.read_char()
 		}
 		`}` {
 			tok = new_token(token.r_brace, l.ch)
+			l.read_char()
 		}
-		`0` {
+		0 {
 			tok.literal = ''
 			tok.typ = token.eof
 		}
@@ -70,12 +78,10 @@ pub fn (mut l Lexer) next_token() token.Token {
 				tok.literal = l.read_number()
 			}
 			else {
-				tok.literal = ''
-				tok.typ = token.eof
+				tok = new_token(token.illegal, l.ch)
 			}
 		}
 	}
-	l.read_char()
 	return tok 
 }
 

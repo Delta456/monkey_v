@@ -32,7 +32,7 @@ fn test_next_token() {
 
 }
 
-
+/*
 fn test_next_token_basic2() {
 	input := "
 	        let five = 5;
@@ -65,4 +65,4 @@ fn test_next_token_basic2() {
 		}
 	}
 }
-
+*/

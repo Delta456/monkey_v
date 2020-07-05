@@ -14,7 +14,7 @@ pub fn start() {
 		print(prompt)
 		line := os.get_line()
 		if line == 'exit' {
-			 break 
+			break 
 		}
 		mut l := lexer.new(line)
 		mut tok := l.next_token()
