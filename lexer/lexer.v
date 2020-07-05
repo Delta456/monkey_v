@@ -91,7 +91,7 @@ fn new_token(token_type string, char byte) token.Token {
 
 fn (mut l Lexer) read_identifier() string {
 	pos := l.pos
-	for is_letter(l.ch) {
+	for is_letter(l.ch) || l.ch.is_digit() {
 		l.read_char()
 	}
 	return l.input[pos..l.pos]
