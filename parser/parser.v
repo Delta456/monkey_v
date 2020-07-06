@@ -30,7 +30,7 @@ pub fn (mut parser Parser) parse() {
 }
 
 fn (mut parser Parser) top_lvl_stmt() {
-	match (parser.cur_token.typ) {
+	match parser.cur_token.typ {
 		token.key_let {
 			parser.next()
 			parser.expect(token.ident)
@@ -44,9 +44,7 @@ fn (mut parser Parser) top_lvl_stmt() {
 			parser.expect(token.semicolon)
 			return
 		}
-		token.key_function {
-
-		}
+		token.key_function {}
 		else {
 			parser.error('Token is not a top level statement.')
 		}
