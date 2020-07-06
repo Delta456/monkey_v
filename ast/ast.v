@@ -2,9 +2,11 @@ module ast
 
 import token
 
-pub type Node = LetStatement | ReturnStatement 
-pub type Statement = LetStatement | ReturnStatement | FnStatement
-pub type Expression = IntegerExpression | StringExpression | FnStatement | Identifier
+pub type Node = LetStatement | ReturnStatement
+
+pub type Statement = FnStatement | LetStatement | ReturnStatement
+
+pub type Expression = FnStatement | Identifier | IntegerExpression | StringExpression
 
 pub struct Program {
 	statements []Statement
@@ -22,15 +24,18 @@ pub struct Identifier {
 	value string
 }
 
-pub fn (ident Identifier) expression_node() {}
+pub fn (ident Identifier) expression_node() {
+}
 
-pub fn (stmt Statement) token_literal() string { return 'TODO' }
+pub fn (stmt Statement) token_literal() string {
+	return 'TODO'
+}
 
 pub struct LetStatement {
-	token token.Token
-	name Identifier
+	token     token.Token
+	name      Identifier
 	has_value bool
-	value Expression
+	value     Expression
 }
 
 pub struct StringExpression {
@@ -40,17 +45,20 @@ pub struct StringExpression {
 pub struct IntegerExpression {
 	value string
 }
+
 pub struct ReturnStatement {
-	token token.Token // the `return` token
+	token        token.Token // the `return` token
 	return_value Expression
 }
 
-fn (rs ReturnStatement) token_literal() string { return rs.token.literal }
+fn (rs ReturnStatement) token_literal() string {
+	return rs.token.literal
+}
 
 pub struct FnStatement {
-	token token.Token
-	anonym bool
-	name Identifier
+	token     token.Token
+	anonym    bool
+	name      Identifier
 	parameter []Identifier
-	stmts []Statement
+	stmts     []Statement
 }

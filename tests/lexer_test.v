@@ -1,35 +1,32 @@
 import lexer
 import token
 
-
 struct TestToken {
-	expected_type string
+	expected_type    string
 	expected_literal string
 }
 
-
 fn test_next_token() {
 	input := '+ = ( ) { } , ;'
-
-	tests := [token.Token{token.plus, '+'}, token.Token{token.assign, '='}, token.Token{token.l_paren, '('}, token.Token{token.r_paren, ')'},
-	token.Token{token.l_brace, '{'}, token.Token{token.r_brace, '}'}, token.Token{token.colon, ','}, token.Token{token.semicolon, ';'}, token.Token{token.eof, ''}]
-
+	tests := [token.Token{token.plus, '+'},
+		token.Token{token.assign, '='}, token.Token{token.l_paren, '('},
+		token.Token{token.r_paren, ')'},
+		token.Token{token.l_brace, '{'}, token.Token{token.r_brace, '}'},
+		token.Token{token.colon, ','}, token.Token{token.semicolon, ';'},
+		token.Token{token.eof, ''}
+	]
 	mut l := lexer.new(input)
-
-	for i , tt in tests {
+	for i, tt in tests {
 		tok := l.next_token()
-
 		if tok.typ != tt.typ {
-			eprintln('tests[$i] - tokentype wrong. expected = `${tt.typ}` , got = `${tok.typ}`')
+			eprintln('tests[$i] - tokentype wrong. expected = `$tt.typ` , got = `$tok.typ`')
 			assert false
 		}
-
 		if tok.literal != tt.literal {
-			eprintln('tests[$i] - literal wrong. expected = `${tt.literal}` , got = `${tok.literal}`')
+			eprintln('tests[$i] - literal wrong. expected = `$tt.literal` , got = `$tok.literal`')
 			assert false
 		}
 	}
-
 }
 
 /*
