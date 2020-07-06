@@ -1,8 +1,10 @@
 module ast
 
-pub type Node = LetStatement | ReturnStatement
-pub type Statement = LetStatement | ReturnStatement
-pub type Expression = LetStatement | ReturnStatement
+import token
+
+pub type Node = LetStatement //| ReturnStatement
+pub type Statement = LetStatement //| ReturnStatement
+pub type Expression = IntegerExpression | StringExpression
 
 pub struct Program {
 	statements []Statement
@@ -10,12 +12,12 @@ pub struct Program {
 
 pub fn (p Program) token_literals() string {
 	if p.statements.len > 0 {
-		return p.statements[0].token_literal()
+		return p.statements[0].name.token_literal()
 	}
 	return ''
 }
 
-struct Identifier {
+pub struct Identifier {
 	token token.Token
 	value string
 }
@@ -27,5 +29,14 @@ pub fn (ident Identifier) token_literal() string { return ident.token.literal }
 pub struct LetStatement {
 	token token.Token
 	name Identifier
+	has_value bool
 	value Expression
+}
+
+pub struct StringExpression {
+	value string
+}
+
+pub struct IntegerExpression {
+	value string
 }

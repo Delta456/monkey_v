@@ -2,6 +2,7 @@ module parser
 
 import token
 import lexer
+import ast
 
 struct Parser {
 	filename string
@@ -20,33 +21,57 @@ pub fn new_repl_parser(line string) &Parser {
 	}
 }
 
-pub fn (mut parser Parser) parse() {
+pub fn (mut parser Parser) parse() ast.Program {
 	parser.next()
-
+	mut program := []ast.Statement{}
 	for parser.cur_token.typ != token.eof {
-		parser.top_lvl_stmt()
+		program << parser.top_lvl_stmt()
 		parser.next()
 	}
+	return ast.Program{program}
 }
 
-fn (mut parser Parser) top_lvl_stmt() {
+fn (mut parser Parser) top_lvl_stmt() ast.Statement {
+	stmt_token := parser.cur_token
 	match parser.cur_token.typ {
 		token.key_let {
 			parser.next()
 			parser.expect(token.ident)
+			name := ast.Identifier {parser.cur_token, parser.cur_token.literal}
 			parser.next()
 			if parser.cur_token.typ == token.assign {
-				parser.next()
+				value := parser.expression()
 				parser.next()
 				parser.expect(token.semicolon)
-				return
+				return ast.LetStatement{
+					token: stmt_token
+					name: name
+					has_value: true
+					value: value
+				}
 			}
 			parser.expect(token.semicolon)
-			return
+			return ast.LetStatement{
+				token: stmt_token
+				name: name
+				has_value: false
+			}
 		}
 		token.key_function {}
 		else {
 			parser.error('Token is not a top level statement.')
+		}
+	}
+}
+
+fn (mut parser Parser) expression() ast.Expression {
+	parser.next()
+	match parser.cur_token.typ {
+		token.int {
+			return ast.IntegerExpression { parser.cur_token.literal }
+		}
+		else {
+			parser.error('Unknown expression')
 		}
 	}
 }
