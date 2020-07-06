@@ -37,7 +37,6 @@ fn (l Lexer) peek_char() byte {
 pub fn (mut l Lexer) next_token() token.Token {
 	mut tok := token.Token{}
 	l.skip_whitespaces()
-
 	match l.ch {
 		`=` {
 			if l.peek_char() == `=` {
@@ -123,6 +122,7 @@ pub fn (mut l Lexer) next_token() token.Token {
 				tok.literal = l.read_number()
 			}
 			else {
+				println(l.ch)
 				tok = new_token(token.illegal, l.ch)
 			}
 		}

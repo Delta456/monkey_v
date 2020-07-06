@@ -2,6 +2,7 @@ module parser
 
 import token
 import lexer
+import os
 import ast
 
 struct Parser {
@@ -12,7 +13,13 @@ mut:
 	idx_token int
 }
 
-//pub fn new_parser(filename string) &Parser {}
+pub fn new_parser(filename string) &Parser {
+	text := os.read_file(filename) or { panic(err) }
+	return &Parser{
+		filename: filename
+		lexer: lexer.new(text)
+	}
+}
 
 pub fn new_repl_parser(line string) &Parser {
 	return &Parser{
@@ -35,34 +42,13 @@ fn (mut parser Parser) top_lvl_stmt() ast.Statement {
 	stmt_token := parser.cur_token
 	match parser.cur_token.typ {
 		token.key_let {
-			parser.next()
-			parser.expect(token.ident)
-			name := ast.Identifier {parser.cur_token, parser.cur_token.literal}
-			parser.next()
-			if parser.cur_token.typ == token.assign {
-				parser.next()
-				value := parser.expression()
-				parser.next()
-				parser.expect(token.semicolon)
-				return ast.LetStatement{
-					token: stmt_token
-					name: name
-					has_value: true
-					value: value
-				}
-			}
-			parser.expect(token.semicolon)
-			return ast.LetStatement{
-				token: stmt_token
-				name: name
-				has_value: false
-			}
+			return parser.let(stmt_token)
 		}
 		token.key_function {
 			return parser.function(stmt_token, false)
 		}
 		else {
-			parser.error('Token is not a top level statement.')
+			parser.error('Token $parser.cur_token.typ is not a top level statement.')
 		}
 	}
 }
@@ -80,8 +66,11 @@ fn (mut parser Parser) stmt() ast.Statement {
 				return_value: value
 			}
 		}
+		token.key_let {
+			return parser.let(stmt_token)
+		}
 		else {
-			parser.error('Token is not a statement')
+			parser.error('Token $parser.cur_token.typ is not a statement')
 		}
 	}
 }
@@ -91,11 +80,14 @@ fn (mut parser Parser) expression() ast.Expression {
 		token.int {
 			return ast.IntegerExpression { parser.cur_token.literal }
 		}
+		token.ident {
+			return ast.Identifier { parser.cur_token, parser.cur_token.literal }
+		}
 		token.key_function {
 			return parser.function(parser.cur_token, true)
 		}
 		else {
-			parser.error('Unknown expression')
+			parser.error('Unknown $parser.cur_token.typ expression')
 		}
 	}
 }
@@ -131,6 +123,31 @@ fn (mut parser Parser) function(stmt_token token.Token, anonym bool) ast.FnState
 		name: name
 		parameter: parameter
 		stmts: stmts
+	}
+}
+
+fn (mut parser Parser) let(stmt_token token.Token) ast.LetStatement {
+	parser.next()
+	parser.expect(token.ident)
+	name := ast.Identifier {parser.cur_token, parser.cur_token.literal}
+	parser.next()
+	if parser.cur_token.typ == token.assign {
+		parser.next()
+		value := parser.expression()
+		parser.next()
+		parser.expect(token.semicolon)
+		return ast.LetStatement{
+			token: stmt_token
+			name: name
+			has_value: true
+			value: value
+		}
+	}
+	parser.expect(token.semicolon)
+	return ast.LetStatement{
+		token: stmt_token
+		name: name
+		has_value: false
 	}
 }
 

@@ -4,7 +4,7 @@ import token
 
 pub type Node = LetStatement | ReturnStatement 
 pub type Statement = LetStatement | ReturnStatement | FnStatement
-pub type Expression = IntegerExpression | StringExpression | FnStatement
+pub type Expression = IntegerExpression | StringExpression | FnStatement | Identifier
 
 pub struct Program {
 	statements []Statement
