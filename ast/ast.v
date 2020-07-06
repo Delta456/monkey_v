@@ -1,15 +1,29 @@
 module ast
 
 import token
+import strings
 
 pub type Node = LetStatement | ReturnStatement
 
 pub type Statement = FnStatement | LetStatement | ReturnStatement
 
-pub type Expression = FnStatement | Identifier | IntegerExpression | StringExpression
+pub type Expression = ExpressionStatement | FnStatement | Identifier | IntegerExpression |
+	StringExpression
 
 pub struct Program {
 	statements []Statement
+}
+
+pub fn (p Program) str() string {
+	mut sb := strings.Builder{}
+	for s in p.statements {
+		// sb.write(s.str())
+		match s {
+			LetStatement { sb.write(s.str()) }
+			else {}
+		}
+	}
+	return sb.str()
 }
 
 pub fn (p Program) token_literals() string {
@@ -38,6 +52,24 @@ pub struct LetStatement {
 	value     Expression
 }
 
+pub fn (ls LetStatement) str() string {
+	mut sb := strings.Builder{}
+	sb.write(ls.token_literal() + ' ')
+	sb.write(ls.name.str())
+	sb.write(' = ')
+	/*
+	if ls.value is FnStatement | Identifier | IntegerExpression | StringExpression | ExpressionStatement
+		sb.write(ls.value)
+	}
+	*/
+	sb.write(';')
+	return sb.str()
+}
+
+pub fn (ls LetStatement) token_literal() string {
+	return ls.token.literal
+}
+
 pub struct StringExpression {
 	value string
 }
@@ -61,4 +93,13 @@ pub struct FnStatement {
 	name      Identifier
 	parameter []Identifier
 	stmts     []Statement
+}
+
+pub struct ExpressionStatement {
+	token      token.Token
+	expression Expression
+}
+
+pub fn (expstmt ExpressionStatement) token_literal() string {
+	return expstmt.token.literal
 }
