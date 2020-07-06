@@ -2,8 +2,8 @@ module ast
 
 import token
 
-pub type Node = LetStatement //| ReturnStatement
-pub type Statement = LetStatement //| ReturnStatement
+pub type Node = LetStatement | ReturnStatement 
+pub type Statement = LetStatement | ReturnStatement
 pub type Expression = IntegerExpression | StringExpression
 
 pub struct Program {
@@ -40,3 +40,9 @@ pub struct StringExpression {
 pub struct IntegerExpression {
 	value string
 }
+pub struct ReturnStatement {
+	token token.Token // the `return` token
+	return_value Expression
+}
+
+fn (rs ReturnStatement) token_literal() string { return rs.token.literal }

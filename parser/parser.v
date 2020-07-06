@@ -57,6 +57,18 @@ fn (mut parser Parser) top_lvl_stmt() ast.Statement {
 				has_value: false
 			}
 		}
+		/*
+		token.key_return {
+			cur_token := parser.cur_token
+			parser.next()
+			value := parser.expression()
+			parser.next()
+			parser.expect(token.semicolon)
+			return ast.ReturnStatement{
+				token: cur_token,
+				return_value: value
+			}
+		}*/
 		token.key_function {}
 		else {
 			parser.error('Token is not a top level statement.')
