@@ -3,8 +3,8 @@ module ast
 import token
 
 pub type Node = LetStatement | ReturnStatement 
-pub type Statement = LetStatement | ReturnStatement
-pub type Expression = IntegerExpression | StringExpression
+pub type Statement = LetStatement | ReturnStatement | FnStatement
+pub type Expression = IntegerExpression | StringExpression | FnStatement
 
 pub struct Program {
 	statements []Statement
@@ -12,7 +12,7 @@ pub struct Program {
 
 pub fn (p Program) token_literals() string {
 	if p.statements.len > 0 {
-		return p.statements[0].name.token_literal()
+		return p.statements[0].token_literal()
 	}
 	return ''
 }
@@ -24,7 +24,7 @@ pub struct Identifier {
 
 pub fn (ident Identifier) expression_node() {}
 
-pub fn (ident Identifier) token_literal() string { return ident.token.literal }
+pub fn (stmt Statement) token_literal() string { return 'TODO' }
 
 pub struct LetStatement {
 	token token.Token
@@ -46,3 +46,10 @@ pub struct ReturnStatement {
 }
 
 fn (rs ReturnStatement) token_literal() string { return rs.token.literal }
+
+pub struct FnStatement {
+	token token.Token
+	name Identifier
+	parameter []Identifier
+	stmts []Statement
+}
