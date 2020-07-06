@@ -40,6 +40,7 @@ fn (mut parser Parser) top_lvl_stmt() ast.Statement {
 			name := ast.Identifier {parser.cur_token, parser.cur_token.literal}
 			parser.next()
 			if parser.cur_token.typ == token.assign {
+				parser.next()
 				value := parser.expression()
 				parser.next()
 				parser.expect(token.semicolon)
@@ -58,35 +59,7 @@ fn (mut parser Parser) top_lvl_stmt() ast.Statement {
 			}
 		}
 		token.key_function {
-			parser.next()
-			parser.expect(token.ident)
-			name := ast.Identifier {parser.cur_token, parser.cur_token.literal}
-			parser.next()
-			parser.expect(token.l_paren)
-			parser.next()
-			mut parameter := []ast.Identifier {}
-			if parser.cur_token.typ != token.r_paren {
-				for {
-					parser.expect(token.ident)
-					parameter << ast.Identifier{parser.cur_token, parser.cur_token.literal}
-					parser.next()
-					if parser.cur_token.typ == token.r_paren {
-						break
-					}
-					parser.expect(token.colon)
-					parser.next()
-				}
-			}
-			parser.next()
-			parser.expect(token.l_brace)
-			stmts := parser.block()
-			parser.expect(token.r_brace)
-			return ast.FnStatement {
-				token: stmt_token
-				name: name
-				parameter: parameter
-				stmts: stmts
-			}
+			return parser.function(stmt_token, false)
 		}
 		else {
 			parser.error('Token is not a top level statement.')
@@ -114,10 +87,12 @@ fn (mut parser Parser) stmt() ast.Statement {
 }
 
 fn (mut parser Parser) expression() ast.Expression {
-	parser.next()
 	match parser.cur_token.typ {
 		token.int {
 			return ast.IntegerExpression { parser.cur_token.literal }
+		}
+		token.key_function {
+			return parser.function(parser.cur_token, true)
 		}
 		else {
 			parser.error('Unknown expression')
@@ -125,9 +100,49 @@ fn (mut parser Parser) expression() ast.Expression {
 	}
 }
 
+fn (mut parser Parser) function(stmt_token token.Token, anonym bool) ast.FnStatement {
+	parser.next()
+	mut name := ast.Identifier{}
+	if !anonym {
+		parser.expect(token.ident)
+		name = ast.Identifier {parser.cur_token, parser.cur_token.literal}
+		parser.next()
+	}
+	parser.expect(token.l_paren)
+	parser.next()
+	mut parameter := []ast.Identifier {}
+	if parser.cur_token.typ != token.r_paren {
+		for {
+			parser.expect(token.ident)
+			parameter << ast.Identifier{parser.cur_token, parser.cur_token.literal}
+			parser.next()
+			if parser.cur_token.typ == token.r_paren {
+				break
+			}
+			parser.expect(token.colon)
+			parser.next()
+		}
+	}
+	parser.next()
+	stmts := parser.block()
+	return ast.FnStatement {
+		token: stmt_token
+		anonym: anonym
+		name: name
+		parameter: parameter
+		stmts: stmts
+	}
+}
+
 fn (mut parser Parser) block() []ast.Statement {
 	mut statements := []ast.Statement{}
+	parser.expect(token.l_brace)
 	parser.next()
+	for parser.cur_token.typ != token.r_brace {
+		statements << parser.stmt()
+		parser.next()
+	}
+	parser.expect(token.r_brace)
 	return statements
 }
 

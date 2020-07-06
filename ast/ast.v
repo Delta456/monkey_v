@@ -49,6 +49,7 @@ fn (rs ReturnStatement) token_literal() string { return rs.token.literal }
 
 pub struct FnStatement {
 	token token.Token
+	anonym bool
 	name Identifier
 	parameter []Identifier
 	stmts []Statement
