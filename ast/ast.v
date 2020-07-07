@@ -91,7 +91,7 @@ pub struct ReturnStatement {
 	return_value Expression
 }
 
-fn (rs ReturnStatement) token_literal() string {
+pub fn (rs ReturnStatement) token_literal() string {
 	return rs.token.literal
 }
 

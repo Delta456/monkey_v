@@ -7,7 +7,7 @@ fn test_let_statement() {
 	let ab = 13;
 	'
 	p := parser.new_repl_parser(input)
-	program := p.parse()
+	program := p.parse_top_lvl()
 
 	if program.statements.len != 3 {
 		eprintln('program.statement does not contain 3 statements, got = ${program.statements.len}')
@@ -35,4 +35,27 @@ fn let_statement(stmt ast.LetStatement, name string) bool {
 			return false
 		}
 		return true
+}
+
+fn test_return_statement() {
+	input := 'return 3;
+	return 13;
+	return 24;
+	'
+	p := parser.new_repl_parser(input)
+	program := p.parse_stmt()
+
+	if program.statements.len != 3 {
+		eprintln('program.statement does not contain 3 statements, got = ${program.statements.len}')
+		assert false
+	}
+
+	for stmt in program.statements {
+		return_stmt := stmt as ast.ReturnStatement
+		if return_stmt.token_literal() != 'return'  {
+			eprintln('ast.ReturnStatement doesn\'t `return`, got ${return_stmt.token_literal()} instead ')
+			assert false
+		}
+	}
+	assert true
 }

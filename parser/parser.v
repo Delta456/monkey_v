@@ -30,11 +30,21 @@ pub fn new_repl_parser(line string) &Parser {
 	}
 }
 
-pub fn (mut parser Parser) parse() ast.Program {
+pub fn (mut parser Parser) parse_top_lvl() ast.Program {
 	parser.next()
 	mut program := []ast.Statement{}
 	for parser.cur_token.typ != token.eof {
 		program << parser.top_lvl_stmt()
+		parser.next()
+	}
+	return ast.Program{program}
+}
+
+pub fn (mut parser Parser) parse_stmt() ast.Program {
+	parser.next()
+	mut program := []ast.Statement{}
+	for parser.cur_token.typ != token.eof {
+		program << parser.stmt()
 		parser.next()
 	}
 	return ast.Program{program}

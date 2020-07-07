@@ -23,7 +23,7 @@ pub fn start(ty Type) {
 		}
 		if ty == .parser {
 			mut p := parser.new_repl_parser(line)
-			program := p.parse()
+			program := p.parse_top_lvl()
 			println(program.token_literals())
 		} else if ty == .lexer {
 			mut l := lexer.new(line)
