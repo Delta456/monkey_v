@@ -11,6 +11,7 @@ pub type Expression = ExpressionStatement | FnStatement | Identifier | IntegerEx
 	StringExpression
 
 pub struct Program {
+pub:
 	statements []Statement
 }
 
@@ -34,6 +35,7 @@ pub fn (p Program) token_literals() string {
 }
 
 pub struct Identifier {
+pub:
 	token token.Token
 	value string
 }
@@ -42,10 +44,16 @@ pub fn (ident Identifier) expression_node() {
 }
 
 pub fn (stmt Statement) token_literal() string {
-	return 'TODO'
+	match stmt {
+		LetStatement {
+			return stmt.token_literal()
+		}
+		else {}
+	}
 }
 
 pub struct LetStatement {
+pub:
 	token     token.Token
 	name      Identifier
 	has_value bool
@@ -67,7 +75,7 @@ pub fn (ls LetStatement) str() string {
 }
 
 pub fn (ls LetStatement) token_literal() string {
-	return ls.token.literal
+	return ls.name.token.literal
 }
 
 pub struct StringExpression {

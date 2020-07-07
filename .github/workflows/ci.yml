@@ -21,7 +21,7 @@ jobs:
     - name: Run Tests
       run: |
         cd ./vlib/monkey_v/
-        v test tests/lexer_test.v
+        v test tests/
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
@@ -45,12 +45,11 @@ jobs:
     - name: Run Tests
       run: |
         cd ./vlib/monkey_v/
-        v test tests/lexer_test.v
+        v test tests/
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
         v run main.v tests/top_lvl_stmt.monkey
-
 
   windows-msvc:
     runs-on: windows-latest
@@ -69,6 +68,7 @@ jobs:
       run: .\make.bat -msvc -skip-path
     # Don't move applying V directory to PATH, to other steps
     - name: Run Tests
-      run: .\v.exe test .\vlib\monkey_v\tests\lexer_test.v
+      run: |
+          .\v.exe test .\vlib\monkey_v\tests\
     - name: Run Main
-      run: .\v.exe run .\vlib.\monkey_v\main.v #tests\top_lvl_stmt.monkey
+      run: .\v.exe run .\vlib.\monkey_v\main.v .\vlib.\monkey_v\tests\top_lvl_stmt.monkey
