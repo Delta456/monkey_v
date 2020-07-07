@@ -96,6 +96,7 @@ fn (rs ReturnStatement) token_literal() string {
 }
 
 pub struct FnStatement {
+pub:
 	token     token.Token
 	anonym    bool
 	name      Identifier
@@ -104,6 +105,7 @@ pub struct FnStatement {
 }
 
 pub struct ExpressionStatement {
+pub:
 	token      token.Token
 	expression Expression
 }

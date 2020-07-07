@@ -1,10 +1,10 @@
-//import parser
+import parser
 import os
-import repl
+//import repl
 
 fn main() {
 	println('Hello, this is the Monkey programming language implementation in V!')
-
+/*
 	mut typ := repl.Type.lexer
 	if os.args.len > 0 {
 		if '-parser' in os.args {
@@ -12,10 +12,10 @@ fn main() {
 		}
 	}
 	repl.start(typ)
-/*
-    $if !windows { // TODO
+*/
+   // $if !windows { // TODO
 	  mut parser := parser.new_parser(os.args[1])
       parser.parse()
-    }
-*/
+    //}
+
 }
