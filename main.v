@@ -12,7 +12,9 @@ fn main() {
 		}
 	}
 	repl.start(typ)
-*/
-    mut parser := parser.new_parser(os.args[1])
-    parser.parse()
+*/ 
+    $if !windows {
+	  mut parser := parser.new_parser(os.args[1])
+      parser.parse()
+    }
 }
