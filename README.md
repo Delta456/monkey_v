@@ -1,6 +1,6 @@
 # Monkey Interpreter in V
 
-> This project isn't yet worked on for the time being because I am wating for V 0.2 so there will errors and unoptimised code.
+![CI](https://github.com/Delta456/monkey_v/workflows/CI/badge.svg?branch=dev)
 
 Implementation of [Monkey Programming Language](https://monkeylang.org/) in [V](https://vlang.io/) from [Interpreter Book](https://interpreterbook.com/).
 

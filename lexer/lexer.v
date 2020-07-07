@@ -3,15 +3,17 @@ module lexer
 import token
 
 pub struct Lexer {
-	input string
+	input    string
 mut:
-    pos int // current position in input (points to current char)
+	pos      int // current position in input (points to current char)
 	read_pos int // current position in input (after current char)
-	ch byte // current char under examination
+	ch       byte // current char under examination
 }
 
 pub fn new(input string) Lexer {
-	mut l := Lexer{input : input}
+	mut l := Lexer{
+		input: input
+	}
 	l.read_char()
 	return l
 }
@@ -19,22 +21,34 @@ pub fn new(input string) Lexer {
 fn (mut l Lexer) read_char() {
 	if l.read_pos >= l.input.len {
 		l.ch = 0
-	}
-	else {
+	} else {
 		l.ch = l.input[l.read_pos]
 	}
 	l.pos = l.read_pos
 	l.read_pos++
 }
 
+fn (l Lexer) peek_char() byte {
+	if l.read_pos >= l.input.len {
+		return 0
+	}
+	return l.input[l.read_pos]
+}
+
 pub fn (mut l Lexer) next_token() token.Token {
 	mut tok := token.Token{}
 	l.skip_whitespaces()
-
 	match l.ch {
 		`=` {
-			tok = new_token(token.assign, l.ch)
-			l.read_char()
+			if l.peek_char() == `=` {
+				ch := l.ch
+				l.read_char()
+				tok = token.Token{token.eq, ch.str() + l.ch.str()}
+				l.read_char()
+			} else {
+				tok = new_token(token.assign, l.ch)
+				l.read_char()
+			}
 		}
 		`;` {
 			tok = new_token(token.semicolon, l.ch)
@@ -56,6 +70,37 @@ pub fn (mut l Lexer) next_token() token.Token {
 			tok = new_token(token.plus, l.ch)
 			l.read_char()
 		}
+		`-` {
+			tok = new_token(token.minus, l.ch)
+			l.read_char()
+		}
+		`*` {
+			tok = new_token(token.asterisk, l.ch)
+			l.read_char()
+		}
+		`/` {
+			tok = new_token(token.slash, l.ch)
+			l.read_char()
+		}
+		`!` {
+			if l.peek_char() == `=` {
+				ch := l.ch
+				l.read_char()
+				tok = token.Token{token.not_eq, ch.str() + l.ch.str()}
+				l.read_char()
+			} else {
+				tok = new_token(token.assign, l.ch)
+				l.read_char()
+			}
+		}
+		`<` {
+			tok = new_token(token.lt, l.ch)
+			l.read_char()
+		}
+		`>` {
+			tok = new_token(token.gt, l.ch)
+			l.read_char()
+		}
 		`{` {
 			tok = new_token(token.l_brace, l.ch)
 			l.read_char()
@@ -72,21 +117,23 @@ pub fn (mut l Lexer) next_token() token.Token {
 			if is_letter(l.ch) {
 				tok.literal = l.read_identifier()
 				tok.typ = token.lookup_ident(tok.literal)
-			}
-			else if l.ch.is_digit() {
+			} else if l.ch.is_digit() {
 				tok.typ = token.int
 				tok.literal = l.read_number()
-			}
-			else {
+			} else {
+				println(l.ch)
 				tok = new_token(token.illegal, l.ch)
 			}
 		}
 	}
-	return tok 
+	return tok
 }
 
 fn new_token(token_type string, char byte) token.Token {
-	return token.Token{typ: token_type, literal: char.str()}
+	return token.Token{
+		typ: token_type
+		literal: char.str()
+	}
 }
 
 fn (mut l Lexer) read_identifier() string {
@@ -105,10 +152,8 @@ fn (mut l Lexer) read_number() string {
 	return l.input[pos..l.pos]
 }
 
-
-
 fn (mut l Lexer) skip_whitespaces() {
-	for l.ch == ` ` || l.ch == `\t` || l.ch == `\n` || l.ch == `\r`{
+	for l.ch == ` ` || l.ch == `\t` || l.ch == `\n` || l.ch == `\r` {
 		l.read_char()
 	}
 }

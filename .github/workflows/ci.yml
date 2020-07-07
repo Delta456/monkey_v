@@ -1,0 +1,74 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+    - name: Checkout monkey_v
+      uses: actions/checkout@v2
+      with:
+        path: vlib/monkey_v
+    - name: Build V
+      run: |
+        make
+        sudo ./v symlink
+    - name: Run Tests
+      run: |
+        cd ./vlib/monkey_v/
+        v test tests/
+    - name: Run Main
+      run: |
+        cd ./vlib/monkey_v/
+        v run main.v tests/top_lvl_stmt.monkey
+
+  macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+    - name: Checkout monkey_v
+      uses: actions/checkout@v2
+      with:
+        path: vlib/monkey_v
+    - name: Build V
+      run: |
+        make
+        ./v symlink
+    - name: Run Tests
+      run: |
+        cd ./vlib/monkey_v/
+        v test tests/
+    - name: Run Main
+      run: |
+        cd ./vlib/monkey_v/
+        v run main.v tests/top_lvl_stmt.monkey
+
+  windows-msvc:
+    runs-on: windows-latest
+    env:
+        VFLAGS: -cc msvc
+    steps:
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+    - name: Checkout monkey_v
+      uses: actions/checkout@v2
+      with:
+        path: vlib/monkey_v
+    - name: Build V
+      run: .\make.bat -msvc -skip-path
+    # Don't move applying V directory to PATH, to other steps
+    - name: Run Tests
+      run: |
+          .\v.exe test .\vlib\monkey_v\tests\
+    - name: Run Main
+      run: .\v.exe run .\vlib.\monkey_v\main.v .\vlib.\monkey_v\tests\top_lvl_stmt.monkey

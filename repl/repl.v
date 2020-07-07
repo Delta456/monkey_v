@@ -11,7 +11,7 @@ pub enum Type {
 }
 
 const (
-	prompt = ">> "
+	prompt = '>> '
 )
 
 pub fn start(ty Type) {
@@ -19,20 +19,19 @@ pub fn start(ty Type) {
 		print(prompt)
 		line := os.get_line()
 		if line == 'exit' {
-			break 
+			break
 		}
 		if ty == .parser {
 			mut p := parser.new_repl_parser(line)
-		    p.parse()
-		}
-		else if ty == .lexer {
+			program := p.parse_top_lvl()
+			println(program.token_literals())
+		} else if ty == .lexer {
 			mut l := lexer.new(line)
-		    mut tok := l.next_token()
-
-		    for tok.typ != token.eof {
-			   println("{type : ${tok.typ}, literal : ${tok.literal}}")
-			   tok = l.next_token()
-		    }
+			mut tok := l.next_token()
+			for tok.typ != token.eof {
+				println('{type : $tok.typ, literal : $tok.literal}')
+				tok = l.next_token()
+			}
 		}
 	}
 }
