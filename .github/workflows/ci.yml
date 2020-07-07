@@ -25,7 +25,7 @@ jobs:
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
-        v run main.v tests/top_lvl_stmt.monkey
+        v run main.v
 
   macos:
     runs-on: macos-latest
@@ -49,7 +49,7 @@ jobs:
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
-        v run main.v tests/top_lvl_stmt.monkey
+        v run main.v
 
   windows-msvc:
     runs-on: windows-latest
@@ -71,4 +71,4 @@ jobs:
       run: |
           .\v.exe test .\vlib\monkey_v\tests\
     - name: Run Main
-      run: .\v.exe run .\vlib.\monkey_v\main.v .\vlib.\monkey_v\tests\top_lvl_stmt.monkey
+      run: .\v.exe run .\vlib.\monkey_v\main.v
