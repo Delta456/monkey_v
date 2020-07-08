@@ -5,22 +5,40 @@ import lexer
 import os
 import ast
 
+type Prefix_parse_fn fn() ast.Expression
+type Infix_parse_fn fn(expr ast.Expression) ast.Expression
+
+pub enum Precendence {
+	lowest = 1
+	equals
+	less_greater
+	sum
+	product
+	prefix
+	call
+}
+
 struct Parser {
 	filename  string
 mut:
 	lexer     lexer.Lexer
 	cur_token token.Token
 	idx_token int
+	prefix_parse_fns map[string]prefix_parse_fn
+	infix_parse_fns map[string]infix_parse_fn
 }
 
 pub fn new_parser(filename string) &Parser {
 	text := os.read_file(filename) or {
 		panic(err)
 	}
-	return &Parser{
+	mut p := &Parser{
 		filename: filename
 		lexer: lexer.new(text)
 	}
+	p.prefix_parse_fns = map[string]prefix_parse_fn
+	p.register_prefix(token.ident, parser.parse_identifier)
+	return p
 }
 
 pub fn new_repl_parser(line string) &Parser {
@@ -38,6 +56,10 @@ pub fn (mut parser Parser) parse_top_lvl() ast.Program {
 		parser.next()
 	}
 	return ast.Program{program}
+}
+
+pub fn (parser Parser) parse_identifier() ast.Identifier {
+	return ast.Identifier{parser.cur_token, parser.cur_token.literal}
 }
 
 pub fn (mut parser Parser) parse_stmt() ast.Program {
@@ -76,9 +98,26 @@ fn (mut parser Parser) stmt() ast.Statement {
 			return parser.let(stmt_token)
 		}
 		else {
-			parser.error('Token $parser.cur_token.typ is not a statement')
+			return parser.expression_stmt()
 		}
 	}
+}
+
+fn (mut parser Parser) expression_stmt() ast.ExpressionStatement {
+	mut stmt := ast.ExpressionStatement{token: parser.cur_token}
+	stmt.expression = parser.parse_expression(.lowest)
+
+	if parser.cur_token.typ == token.semicolon {
+		parser.next()
+	}
+	return stmt
+}
+
+fn (parser Parser) parse_expression(pre Precendence) ast.Expression {
+	prefix := parser.prefix_parse_fns[parser.cur_token.typ]
+	left_expr := prefix()
+	return left_expr
+
 }
 
 fn (mut parser Parser) expression() ast.Expression {
@@ -159,6 +198,14 @@ fn (mut parser Parser) block() []ast.Statement {
 	}
 	parser.expect(token.r_brace)
 	return statements
+}
+
+fn(mut parser Parser) register_infix(token_type string, func infix_parse_fn) {
+	parser.infix_parse_fns[token_type] = func
+}
+
+fn(mut parser Parser) register_prefix(token_type string, func prefix_parse_fn) {
+	parser.prefix_parse_fns[token_type] = func
 }
 
 fn (mut parser Parser) expect(typ string) {

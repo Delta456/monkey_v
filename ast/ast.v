@@ -21,6 +21,7 @@ pub fn (p Program) str() string {
 		// sb.write(s.str())
 		match s {
 			LetStatement { sb.write(s.str()) }
+			ReturnStatement {sb.write(s.str())}
 			else {}
 		}
 	}
@@ -40,12 +41,16 @@ pub:
 	value string
 }
 
-pub fn (ident Identifier) expression_node() {
+pub fn (ident Identifier) str() string {
+	return ident.value
 }
 
 pub fn (stmt Statement) token_literal() string {
 	match stmt {
 		LetStatement {
+			return stmt.token_literal()
+		}
+		ReturnStatement {
 			return stmt.token_literal()
 		}
 		else {}
@@ -95,6 +100,19 @@ pub fn (rs ReturnStatement) token_literal() string {
 	return rs.token.literal
 }
 
+pub fn (rs ReturnStatement) str() string {
+	mut sb := strings.Builder{}
+
+	sb.write(rs.token_literal() + ' ')
+	/*
+	if rs.value is FnStatement | Identifier | IntegerExpression | StringExpression | ExpressionStatement
+		sb.write(rs.value)
+	}
+	*/
+	sb.write(';')
+	return sb.str()
+}
+
 pub struct FnStatement {
 pub:
 	token     token.Token
@@ -106,7 +124,7 @@ pub:
 
 pub struct ExpressionStatement {
 pub:
-	token      token.Token
+	token      token.Token // the first token of the exprression 
 	expression Expression
 }
 
