@@ -123,7 +123,7 @@ pub:
 }
 
 pub struct ExpressionStatement {
-pub:
+pub mut:
 	token      token.Token // the first token of the exprression 
 	expression Expression
 }

@@ -24,8 +24,8 @@ mut:
 	lexer     lexer.Lexer
 	cur_token token.Token
 	idx_token int
-	prefix_parse_fns map[string]prefix_parse_fn
-	infix_parse_fns map[string]infix_parse_fn
+	prefix_parse_fns map[string]Prefix_parse_fn
+	infix_parse_fns map[string]Infix_parse_fn
 }
 
 pub fn new_parser(filename string) &Parser {
@@ -37,7 +37,7 @@ pub fn new_parser(filename string) &Parser {
 		lexer: lexer.new(text)
 	}
 	p.prefix_parse_fns = map[string]prefix_parse_fn
-	p.register_prefix(token.ident, parser.parse_identifier)
+	p.register_prefix(token.ident, parser.parse_identifier())
 	return p
 }
 
@@ -200,11 +200,11 @@ fn (mut parser Parser) block() []ast.Statement {
 	return statements
 }
 
-fn(mut parser Parser) register_infix(token_type string, func infix_parse_fn) {
+fn(mut parser Parser) register_infix(token_type string, func Infix_parse_fn) {
 	parser.infix_parse_fns[token_type] = func
 }
 
-fn(mut parser Parser) register_prefix(token_type string, func prefix_parse_fn) {
+fn(mut parser Parser) register_prefix(token_type string, func Prefix_parse_fn) {
 	parser.prefix_parse_fns[token_type] = func
 }
 
