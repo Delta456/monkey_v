@@ -36,7 +36,7 @@ pub fn new_parser(filename string) &Parser {
 		filename: filename
 		lexer: lexer.new(text)
 	}
-	p.prefix_parse_fns = map[string]prefix_parse_fn
+	p.prefix_parse_fns = map[string]Prefix_parse_fn
 	p.register_prefix(token.ident, parser.parse_identifier())
 	return p
 }
