@@ -1,6 +1,7 @@
 # Monkey Interpreter in V
 
-![CI](https://github.com/Delta456/monkey_v/workflows/CI/badge.svg?branch=master)
+![CI](https://github.com/delta456/monkey_v/actions/workflows/ci.yml/badge.svg
+)
 
 Implementation of the [Monkey Programming Language](https://monkeylang.org/) in [V](https://vlang.io/) Programming Language, following [Writing An Interpreter In Go](https://interpreterbook.com/) book.
 
