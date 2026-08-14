@@ -21,11 +21,14 @@ jobs:
     - name: Run Tests
       run: |
         cd ./vlib/monkey_v/
-        v test tests/
+        v test .
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
-        v run main.v tests/top_lvl_stmt.monkey
+        for f in examples/*.monkey; do
+          echo "=== $f ==="
+          v run main.v "$f"
+        done
 
   macos:
     runs-on: macos-latest
@@ -45,11 +48,14 @@ jobs:
     - name: Run Tests
       run: |
         cd ./vlib/monkey_v/
-        v test tests/
+        v test .
     - name: Run Main
       run: |
         cd ./vlib/monkey_v/
-        v run main.v tests/top_lvl_stmt.monkey
+        for f in examples/*.monkey; do
+          echo "=== $f ==="
+          v run main.v "$f"
+        done
 
   windows-msvc:
     runs-on: windows-latest
@@ -69,6 +75,11 @@ jobs:
     # Don't move applying V directory to PATH, to other steps
     - name: Run Tests
       run: |
-          .\v.exe test .\vlib\monkey_v\tests\
+          .\v.exe test .\vlib\monkey_v\
     - name: Run Main
-      run: .\v.exe run .\vlib.\monkey_v\main.v .\vlib.\monkey_v\tests\top_lvl_stmt.monkey
+      run: |
+        Get-ChildItem .\vlib\monkey_v\examples\*.monkey | ForEach-Object {
+          Write-Host "=== $($_.Name) ==="
+          .\v.exe run .\vlib\monkey_v\main.v $_.FullName
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+        }
