@@ -71,7 +71,7 @@ jobs:
       with:
         path: vlib/monkey_v
     - name: Build V
-      run: .\make.bat -msvc -skip-path
+      run: .\makev.bat -msvc
     # Don't move applying V directory to PATH, to other steps
     - name: Run Tests
       run: |
