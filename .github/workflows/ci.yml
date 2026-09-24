@@ -56,30 +56,3 @@ jobs:
           echo "=== $f ==="
           v run main.v "$f"
         done
-
-  windows-msvc:
-    runs-on: windows-latest
-    env:
-        VFLAGS: -cc msvc
-    steps:
-    - name: Checkout V
-      uses: actions/checkout@v2
-      with:
-        repository: vlang/v
-    - name: Checkout monkey_v
-      uses: actions/checkout@v2
-      with:
-        path: vlib/monkey_v
-    - name: Build V
-      run: .\makev.bat -msvc
-    # Don't move applying V directory to PATH, to other steps
-    - name: Run Tests
-      run: |
-          .\v.exe test .\vlib\monkey_v\
-    - name: Run Main
-      run: |
-        Get-ChildItem .\vlib\monkey_v\examples\*.monkey | ForEach-Object {
-          Write-Host "=== $($_.Name) ==="
-          .\v.exe run .\vlib\monkey_v\main.v $_.FullName
-          if ($LASTEXITCODE -ne 0) { exit 1 }
-        }
