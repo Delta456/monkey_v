@@ -3,7 +3,7 @@
 ![CI](https://github.com/delta456/monkey_v/actions/workflows/ci.yml/badge.svg
 )
 
-Implementation of the [Monkey Programming Language](https://monkeylang.org/) in [V](https://vlang.io/) Programming Language, following [Writing An Interpreter In Go](https://interpreterbook.com/) book.
+Implementation of the [Monkey Programming Language](https://monkeylang.org/) in the [V Programming Language](https://vlang.io/), following [Writing An Interpreter In Go](https://interpreterbook.com/) book.
 
 It includes the full language: integers, floats, booleans, strings, arrays, hashes,
 first-class and higher-order functions, closures, a builtin function library
